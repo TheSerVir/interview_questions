@@ -1,1 +1,1 @@
-# interview_questions
+Follow the questions in the respective folders.
