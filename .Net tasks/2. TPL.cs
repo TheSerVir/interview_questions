@@ -1,32 +1,28 @@
+/// <summary>
+/// What pitfalls could you spot in the async code below?
+/// </summary>
 public class Example2
 {
-    /// <summary>
-    /// What's wrong about this synchronous task execution?
-    /// </summary>
-    public TResult ExecuteSynchroniously<TResult>(Func<Task<TResult>> asyncAction)
+    private readonly AsyncService service = new AsyncService();
+
+    public void UseServiceSynchronously()
     {
-        return asyncAction().Result;
+        service.PerformSomeAction().Result;
     }
 
-    /// <summary>
-    /// How is this "LogAsyncActionExecution1" different from "LogAsyncActionExecution2".
-    /// What's going on under the hood?
-    /// </summary>
-    public async Task LogAsyncActionExecution(Func<Task> asyncAction)
+    public async Task UseServiceAsynchronously()
     {
-        Debug.WriteLine("Running an async action.");
-
-        await asyncAction();
-    
-        Debug.WriteLine("Finished the execution of the async action.");
+        await service.PerformSomeAction();
     }
+}
 
-    public async Task LogAsyncActionExecution2(Func<Task> asyncAction)
+public class AsyncService
+{
+    public async Task<bool> PerformSomeAction()
     {
-        Debug.WriteLine("Running an async action.");
+        // mock a long running operation
+        await Task.Delay(100);
 
-        await asyncAction().ConfigureAwait(false);
-    
-        Debug.WriteLine("Finished the execution of the async action.");
+        return true;
     }
 }
